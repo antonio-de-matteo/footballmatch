@@ -7,6 +7,9 @@
 <%@ page import="java.util.Iterator" %>
 <%@ page import="com.mongodb.client.MongoCollection" %>
 <%@ page import="com.mongodb.client.FindIterable" %>
+<%@ page import="java.util.HashMap" %>
+<%@ page import="org.bson.conversions.Bson" %>
+<%@ page import="com.mongodb.client.MongoCursor" %>
 
 <!DOCTYPE html>
 <html>
@@ -33,6 +36,24 @@
 </div>
 <%
         i++;
-    } %>
+    }
+    HashMap<String,Object> filterMap = new HashMap();
+    filterMap.put("home_team", "England");
+    filterMap.put("away_team", "Scotland");
+    filterMap.put("home_score", "2");
+    filterMap.put("away_score", "2");
+
+//Costruzione documento filtro
+    Bson filter = new Document(filterMap);
+    FindIterable<Document> docIterator = collection.find().filter(filter);
+    MongoCursor<Document> cursor = docIterator.iterator();
+    int j=1;
+    while(cursor.hasNext()){
+
+    %>
+<h4> PARTITE CON FILTRO <%=cursor.next()%> </h4>
+    <% j++;}
+
+%>
 </body>
 </html>
