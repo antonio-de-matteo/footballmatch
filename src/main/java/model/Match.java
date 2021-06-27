@@ -4,7 +4,8 @@ import java.util.Date;
 
 public class Match {
     private String id;
-    private Date date;
+    private int year;
+    private String date;
     private String home_team;
     private String away_team;
     private int home_score;
@@ -15,8 +16,12 @@ public class Match {
     private boolean neutral;
 
 
-    public Match(String id, Date date, String home_team, String away_team, int home_score, int away_score, String tournament, String city, String country, boolean neutral) {
+    public Match() {
+    }
+
+    public Match(String id, int year, String date, String home_team, String away_team, int home_score, int away_score, String tournament, String city, String country, boolean neutral) {
         this.id = id;
+        this.year = year;
         this.date = date;
         this.home_team = home_team;
         this.away_team = away_team;
@@ -36,11 +41,19 @@ public class Match {
         this.id = id;
     }
 
-    public Date getDate() {
+    public int getYear() {
+        return year;
+    }
+
+    public void setYear(int year) {
+        this.year = year;
+    }
+
+    public String getDate() {
         return date;
     }
 
-    public void setDate(Date date) {
+    public void setDate(String date) {
         this.date = date;
     }
 
@@ -108,3 +121,4 @@ public class Match {
         this.neutral = neutral;
     }
 }
+

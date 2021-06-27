@@ -111,12 +111,12 @@
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label class="text-black">Home Team</label>
-                        <input type="text" required class="form-control" name="homeTeam" placeholder="Insert Home Team">
+                        <input type="text" required class="form-control" name="homeTeam" disabled value="All team">
                     </div>
 
                     <div class="form-group col-md-4">
                         <label class="text-black">Away Team</label>
-                        <input type="text" required class="form-control" name="awayTeam" placeholder="Insert Away Team">
+                        <input type="text" required class="form-control" name="awayTeam" disabled value="All team">
                     </div>
 
                 </div>

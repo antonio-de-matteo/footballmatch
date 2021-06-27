@@ -36,6 +36,7 @@
     filterMap.put("home_score", "2");
     filterMap.put("away_score", "2");
 
+
 //Costruzione documento filtro, implementare graficamente con una barra di filtri e dare l'input dell'utente alla hash map
     Bson filter = new Document(filterMap);
     FindIterable<Document> docIterator = collection.find().filter(filter);
@@ -128,13 +129,24 @@ andQuery.put("$and",obj);
     }
 
 
-
+    AggregateIterable<Document> result = collection.aggregate(Arrays.asList(new Document("$project",
+                    new Document("_id", 0L)
+                            .append("home_team", 1L)
+                            .append("home_score", 1L)
+                            .append("away_team", 1L)
+                            .append("away_score", 1L)
+                            .append("date", 1L)),
+            new Document("$match",
+                    new Document("home_team", "Italy")
+                            .append("away_team", "France")
+                            .append("$expr",
+                                    new Document("$gt", Arrays.asList("$home_score", "$away_score"))))));
 
     FindIterable<Document> view = database.getCollection("ItalyVSFranceView").find();
     MongoCursor<Document> cursorView = view.iterator();
     while(cursorView.hasNext()){
         System.out.println("Date in view"+ cursorView.next());
-    }
+    }%>
     // SEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
 </body>
