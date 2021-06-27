@@ -65,7 +65,22 @@
     <div class="transbox" style="margin: 30px; background-color: #ffffff; opacity: 0.9; height: 80%">
         <img src="logo_standard.png" style="width: 40%; margin-top: 30%; margin-left:30%  ">
         <a href="index.jsp">Home</a>
-        <a href="home.jsp">Match</a>
+        <a href="OneQuery.jsp">1 Query</a>
+
+        <a href="TwoQuery.jsp">2 Query</a>
+
+        <a href="ThreeQuery.jsp">3 Query</a>
+
+        <a href="FourQuery.jsp">4 Query</a>
+
+        <a href="FiveQuery.jsp">5 Query</a>
+
+        <a href="SixQuery.jsp">6 Query</a>
+
+        <a href="SevenQuery.jsp">7 Query</a>
+
+
+
     </div>
 </div>
 

@@ -82,7 +82,21 @@
     <div class="transbox" style="margin: 30px; background-color: #ffffff; opacity: 0.9; height: 80%">
         <img src="logo_standard.png" style="width: 40%; margin-top: 30%; margin-left:30%  ">
         <a href="index.jsp">Home</a>
-        <a href="home.jsp">Match</a>
+        <a href="OneQuery.jsp">1 Query</a>
+
+        <a href="TwoQuery.jsp">2 Query</a>
+
+        <a href="ThreeQuery.jsp">3 Query</a>
+
+        <a href="FourQuery.jsp">4 Query</a>
+
+        <a href="FiveQuery.jsp">5 Query</a>
+
+        <a href="SixQuery.jsp">6 Query</a>
+
+        <a href="SevenQuery.jsp">7 Query</a>
+
+
     </div>
 </div>
 
@@ -90,36 +104,28 @@
 
     <div class="card shadow mb-4">
         <div class="card-header py-3">
-            <h6 class="m-0 font-weight-bold text-primary">Search Match</h6>
+            <h6 class="m-0 font-weight-bold text-primary">Search Match filtered by start and end date</h6>
         </div>
         <div class="card-body">
-            <form id="search">
+            <form id="searchQueryUno">
                 <div class="form-row">
                     <div class="form-group col-md-4">
-                        <label class="text-black">Home Team</label>
-                        <input type="text" class="form-control" name="homeTeam" placeholder="Matches by Home Team">
+                        <label class="text-black">Start Date</label>
+                        <input type="date" required class="form-control" name="startDate">
                     </div>
+
                     <div class="form-group col-md-4">
-                        <label class="text-black">The First Date</label>
-                        <input type="date" class="form-control" name="firstDate" placeholder="Matches from this day">
+                        <label class="text-black">End Date</label>
+                        <input type="date" required class="form-control" name="awayDate">
                     </div>
-                    <div class="form-group col-md-4">
-                        <label class="text-black">The Second Date</label>
-                        <input type="date" class="form-control" name="firstDate" placeholder="to this">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label class="text-black">Tournamente name</label>
-                        <input type="text" class="form-control" name="firstDate" placeholder="Matches by Tournament name">
-                    </div>
-                    <div class="form-group col-md-4">
-                        <label class="text-black">Home Team Goal</label>
-                        <input type="text" class="form-control" name="firstDate" placeholder="Matches by min house team goal">
-                    </div>
+
+
                 </div>
-                <button type="button" class="btn btn-primary right" onclick="searchMatch()">Search</button>
+                <button type="submit" class="btn btn-primary right" onclick="searchMatch()">Search</button>
             </form>
         </div>
     </div>
+
 
     <div class="table-responsive" id="matchTable" style="display: none; width: 90%;
     margin-left: 5%;">
