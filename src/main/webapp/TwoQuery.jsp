@@ -13,6 +13,7 @@
 <%@ page import="static com.mongodb.client.model.Filters.gte" %>
 <%@ page import="static javax.management.Query.and" %>
 <%@ page import="static com.mongodb.client.model.Filters.eq" %>
+<%@ page import="model.Match" %>
 
 
 <!DOCTYPE html>
@@ -107,30 +108,37 @@
             <h6 class="m-0 font-weight-bold text-primary">Search 10 Matches without goals</h6>
         </div>
         <div class="card-body">
-            <form id="searchQueryUno">
+            <form id="searchQueryUno" action="ServletQuerys" method="post">
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label class="text-black">Home Team</label>
-                        <input type="text" required class="form-control" name="homeTeam" disabled value="All team">
+                        <input type="text" required class="form-control" name="homeTeam" placeholder="Home Team">
                     </div>
 
                     <div class="form-group col-md-4">
                         <label class="text-black">Away Team</label>
-                        <input type="text" required class="form-control" name="awayTeam" disabled value="All team">
+                        <input type="text" required class="form-control" name="awayTeam" placeholder="Away Team">
+                        <input type="hidden" name="query" value="two">
                     </div>
 
                 </div>
-                <button type="submit" class="btn btn-primary right" onclick="searchMatch()">Search</button>
+                <button type="submit" class="btn btn-primary right">Search</button>
             </form>
         </div>
     </div>
 
+    <% 	if(request.getAttribute("result2")!=null){
+        ArrayList<Match> result = (ArrayList<Match>) request.getAttribute("result2");
 
-    <div class="table-responsive" id="matchTable" style="display: none; width: 90%;
+    %>
+
+
+
+    <div class="table-responsive" id="matchTable" style=" width: 90%;
     margin-left: 5%;">
         <table class="table table-bordered"  width="100%" cellspacing="0">
             <thead>
-            <tr>
+            <tr style="background-color:#007bff">
                 <th>Date</th>
                 <th>Home Team</th>
                 <th>Away Team</th>
@@ -141,12 +149,26 @@
                 <th>Country</th>
                 <th>Neutral</th>
             </tr>
+            <% for (Match m : result)
+            {%>
+            <tr>
+                <td><%=m.getDate()%></td>
+                <td><%=m.getHome_team()%></td>
+                <td><%=m.getAway_team()%></td>
+                <td><%=m.getHome_score()%></td>
+                <td><%=m.getAway_score()%></td>
+                <td><%=m.getTournament()%></td>
+                <td><%=m.getCity()%></td>
+                <td><%=m.getCountry()%></td>
+                <td><%=m.isNeutral()%></td>
+            </tr>
+            <%}%>
             </thead>
         </table>
+
+        <% }%>
     </div>
 </div>
-
-
 <footer class="sticky-footer bg-white">
     <div class="container my-auto">
         <div class="copyright text-center my-auto">
@@ -154,7 +176,5 @@
         </div>
     </div>
 </footer>
-</div>
-
 </body>
 </html>

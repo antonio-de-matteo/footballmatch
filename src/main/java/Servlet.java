@@ -1,3 +1,4 @@
+import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
 import com.mongodb.client.FindIterable;
@@ -18,6 +19,7 @@ import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 @WebServlet("/ServletQuerys")
 public class Servlet extends HttpServlet {
@@ -33,22 +35,65 @@ public class Servlet extends HttpServlet {
         MongoDatabase database = mongoClient.getDatabase("footballResult");
         MongoCollection<Document> collection = database.getCollection("partiteDiCalcio");
         String query = request.getParameter("query");
-        if(query.equals("one")){
+        if(query.equals("one")) {
             String name = request.getParameter("team");
-            Match m = new Match();
-            Document res = collection.find(new Document("home_team", new Document("$eq", name))).first();
-            m.setDate(res.getString("date"));
-            m.setYear(res.getInteger("years"));
-            m.setHome_team(res.getString("home_team"));
-            m.setAway_team(res.getString("away_team"));
-            m.setHome_score(res.getInteger("home_score"));
-            m.setAway_score(res.getInteger("away_score"));
-            m.setTournament((res.getString("tournament")));
-            m.setCity(res.getString("city"));
-            m.setCountry(res.getString("country"));
-            m.setNeutral(res.getBoolean("neutral"));
-            request.setAttribute("result",m);
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/OneQuery.jsp");
+            FindIterable<Document> res = collection.find
+                    (new Document("home_team",
+                            new Document("$eq", name)))
+                    .skip(50)
+                    .limit(20);
+            MongoCursor res1 = res.iterator();
+            ArrayList<Match> ret = new ArrayList<>();
+            while (res1.hasNext()) {
+                Match m = new Match();
+                Document curr = (Document) res1.next();
+                m.setDate(curr.getString("date"));
+                m.setYear(curr.getInteger("years"));
+                m.setHome_team(curr.getString("home_team"));
+                m.setAway_team(curr.getString("away_team"));
+                m.setHome_score(curr.getInteger("home_score"));
+                m.setAway_score(curr.getInteger("away_score"));
+                m.setTournament((curr.getString("tournament")));
+                m.setCity(curr.getString("city"));
+                m.setCountry(curr.getString("country"));
+                m.setNeutral(curr.getBoolean("neutral"));
+                ret.add(m);
+            }
+                request.setAttribute("result", ret);
+                RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/OneQuery.jsp");
+                dispatcher.forward(request, response);
+
+        }
+        if(query.equals("two")) {
+            String nameHome = request.getParameter("homeTeam");
+            String nameAway = request.getParameter("awayTeam");
+            BasicDBObject andQuery = new BasicDBObject();
+            List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+            obj.add(new BasicDBObject("home_score", 0));
+            obj.add(new BasicDBObject("away_score", 0));
+            obj.add(new BasicDBObject("away_team",nameAway));
+            obj.add(new BasicDBObject("home_team",nameHome));
+            andQuery.put("$and", obj);
+            FindIterable<Document> docIterator1 = collection.find(andQuery);
+            MongoCursor<Document> cursorquery2 = docIterator1.iterator();
+            ArrayList<Match> ret = new ArrayList<>();
+            while (cursorquery2.hasNext()) {
+                Match m = new Match();
+                Document curr = cursorquery2.next();
+                m.setDate(curr.getString("date"));
+                m.setYear(curr.getInteger("years"));
+                m.setHome_team(curr.getString("home_team"));
+                m.setAway_team(curr.getString("away_team"));
+                m.setHome_score(curr.getInteger("home_score"));
+                m.setAway_score(curr.getInteger("away_score"));
+                m.setTournament((curr.getString("tournament")));
+                m.setCity(curr.getString("city"));
+                m.setCountry(curr.getString("country"));
+                m.setNeutral(curr.getBoolean("neutral"));
+                ret.add(m);
+            }
+            request.setAttribute("result2", ret);
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/TwoQuery.jsp");
             dispatcher.forward(request, response);
         }
         else if(query.equals("six")) {
@@ -65,6 +110,34 @@ public class Servlet extends HttpServlet {
                 result.add(cursor.next());
             request.setAttribute("result", result);
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/OneQuery.jsp");
+            dispatcher.forward(request, response);
+        }
+        else if(query.equals("three")){
+            int startDate = Integer.parseInt(request.getParameter("startDate"));
+            int endingDate = Integer.parseInt(request.getParameter("toDate"));
+           FindIterable<Document> c = collection.find(new BasicDBObject(
+                   "years",
+                   new BasicDBObject("$gte", startDate).append("$lte", endingDate)
+           ));
+           MongoCursor<Document> cursorquery2 = c.iterator();
+            ArrayList<Match> ret = new ArrayList<>();
+            while (cursorquery2.hasNext()) {
+                Match m = new Match();
+                Document curr = cursorquery2.next();
+                m.setDate(curr.getString("date"));
+                m.setYear(curr.getInteger("years"));
+                m.setHome_team(curr.getString("home_team"));
+                m.setAway_team(curr.getString("away_team"));
+                m.setHome_score(curr.getInteger("home_score"));
+                m.setAway_score(curr.getInteger("away_score"));
+                m.setTournament((curr.getString("tournament")));
+                m.setCity(curr.getString("city"));
+                m.setCountry(curr.getString("country"));
+                m.setNeutral(curr.getBoolean("neutral"));
+                ret.add(m);
+            }
+            request.setAttribute("result", ret);
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/ThreeQuery.jsp");
             dispatcher.forward(request, response);
         }
     }

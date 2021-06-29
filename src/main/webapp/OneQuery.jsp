@@ -121,8 +121,8 @@
     </div>
 
 <% 	if(request.getAttribute("result")!=null){
-    Match result = (Match) request.getAttribute("result");
-    System.out.println(result);
+    ArrayList<Match> result = (ArrayList<Match>) request.getAttribute("result");
+
 %>
 
 
@@ -131,7 +131,7 @@
     margin-left: 5%;">
         <table class="table table-bordered"  width="100%" cellspacing="0">
             <thead>
-            <tr>
+            <tr style="background-color:#007bff">
                 <th>Date</th>
                 <th>Home Team</th>
                 <th>Away Team</th>
@@ -142,23 +142,24 @@
                 <th>Country</th>
                 <th>Neutral</th>
             </tr>
-
+<% for (Match m : result)
+    {%>
             <tr>
-                <td><%=result.getDate()%></td>
-                <td><%=result.getHome_team()%></td>
-                <td><%=result.getAway_team()%></td>
-                <td><%=result.getHome_score()%></td>
-                <td><%=result.getAway_score()%></td>
-                <td><%=result.getTournament()%></td>
-                <td><%=result.getCity()%></td>
-                <td><%=result.getCountry()%></td>
-                <td><%=result.isNeutral()%></td>
+                <td><%=m.getDate()%></td>
+                <td><%=m.getHome_team()%></td>
+                <td><%=m.getAway_team()%></td>
+                <td><%=m.getHome_score()%></td>
+                <td><%=m.getAway_score()%></td>
+                <td><%=m.getTournament()%></td>
+                <td><%=m.getCity()%></td>
+                <td><%=m.getCountry()%></td>
+                <td><%=m.isNeutral()%></td>
             </tr>
-
-
+            <%}%>
             </thead>
         </table>
-        <%}%>
+
+   <% }%>
     </div>
 </div>
 <footer class="sticky-footer bg-white">
