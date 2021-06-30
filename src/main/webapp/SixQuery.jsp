@@ -13,6 +13,7 @@
 <%@ page import="static com.mongodb.client.model.Filters.gte" %>
 <%@ page import="static javax.management.Query.and" %>
 <%@ page import="static com.mongodb.client.model.Filters.eq" %>
+<%@ page import="model.Match" %>
 
 
 <!DOCTYPE html>
@@ -107,26 +108,34 @@
             <h6 class="m-0 font-weight-bold text-primary">Search Match</h6>
         </div>
         <div class="card-body">
-            <form id="searchQueryUno">
+            <form id="searchQueryUno" action="ServletQuerys" method="post">
+                <input type="hidden" name="query" value="six">
                 <div class="form-row">
                     <div class="form-group col-md-4">
                         <label class="text-black">Home Team</label>
-                        <input type="text" class="form-control" required name="homeTeam" placeholder="Insert Home Team">
+                        <input type="text" class="form-control" name="homeTeam" placeholder="Insert Home Team">
                     </div>
 
                     <div class="form-group col-md-4">
                         <label class="text-black">Away Team</label>
-                        <input type="text" class="form-control" required name="awayTeam" placeholder="Insert Away Team">
+                        <input type="text" class="form-control"  name="awayTeam" placeholder="Insert Away Team">
                     </div>
 
                     <div class="form-group col-md-4">
                         <label class="text-black">Home Team Score</label>
-                        <input type="text" class="form-control" required name="homeTeamScore" pattern="[0-9]+" placeholder="Insert home team score">
+                        <input type="number" min="0" max="1000" step="1"  name="homescore"/>
                     </div>
 
                     <div class="form-group col-md-4">
                         <label class="text-black">Away Team Score</label>
-                        <input type="text" class="form-control" required name="awayTeamScore" pattern="[0-9]+" placeholder="Insert away team score">
+                        <input type="number" min="0" max="1000" step="1"  name="awayscore"/>
+
+                    </div>
+
+                    <div class="form-group col-md-4">
+                        <label class="text-black">Date</label>
+                        <input type="date" name="date"/>
+
                     </div>
                 </div>
                 <button type="submit" class="btn btn-primary right" onclick="searchMatch()">Search</button>
@@ -134,12 +143,18 @@
         </div>
     </div>
 
+    <% 	if(request.getAttribute("result")!=null){
+        ArrayList<Match> result = (ArrayList<Match>) request.getAttribute("result");
 
-    <div class="table-responsive" id="matchTable" style="display: none; width: 90%;
+    %>
+
+
+
+    <div class="table-responsive" id="matchTable" style=" width: 90%;
     margin-left: 5%;">
         <table class="table table-bordered"  width="100%" cellspacing="0">
             <thead>
-            <tr>
+            <tr style="background-color:#007bff">
                 <th>Date</th>
                 <th>Home Team</th>
                 <th>Away Team</th>
@@ -150,12 +165,26 @@
                 <th>Country</th>
                 <th>Neutral</th>
             </tr>
+            <% for (Match m : result)
+            {%>
+            <tr>
+                <td><%=m.getDate()%></td>
+                <td><%=m.getHome_team()%></td>
+                <td><%=m.getAway_team()%></td>
+                <td><%=m.getHome_score()%></td>
+                <td><%=m.getAway_score()%></td>
+                <td><%=m.getTournament()%></td>
+                <td><%=m.getCity()%></td>
+                <td><%=m.getCountry()%></td>
+                <td><%=m.isNeutral()%></td>
+            </tr>
+            <%}%>
             </thead>
         </table>
+
+        <% }%>
     </div>
 </div>
-
-
 <footer class="sticky-footer bg-white">
     <div class="container my-auto">
         <div class="copyright text-center my-auto">
@@ -163,7 +192,5 @@
         </div>
     </div>
 </footer>
-</div>
-
 </body>
 </html>

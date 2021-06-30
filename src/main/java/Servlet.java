@@ -98,19 +98,49 @@ public class Servlet extends HttpServlet {
             dispatcher.forward(request, response);
         }
         else if(query.equals("six")) {
+            String nameHome = request.getParameter("homeTeam");
+            String nameAway = request.getParameter("awayTeam");
+            String date = request.getParameter("date");
+            String namescore =request.getParameter("homescore");
+            String awayscore =request.getParameter("awayscore");
             HashMap<String,Object> filterMap = new HashMap();
-            filterMap.put("home_team", "England");
-            filterMap.put("away_team", "Scotland");
-            filterMap.put("home_score", "2");
-            filterMap.put("away_score", "2");
+            if(nameHome!=null) {
+                filterMap.put("home_team", nameHome);
+            }
+            if(date!=""){
+                filterMap.put("date",date);
+            }
+            if(nameAway!=null) {
+                filterMap.put("away_team", nameAway);
+            }
+            if(namescore!="") {
+                filterMap.put("home_score", Integer.parseInt(namescore));
+            }
+            if(awayscore!="") {
+                filterMap.put("away_score", Integer.parseInt(awayscore));
+            }
             Bson filter = new Document(filterMap);
             FindIterable<Document> docIterator = collection.find().filter(filter);
-            MongoCursor<Document> cursor = docIterator.iterator();
-            ArrayList<Document> result = new ArrayList<>();
-            while(cursor.hasNext())
-                result.add(cursor.next());
-            request.setAttribute("result", result);
-            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/OneQuery.jsp");
+            MongoCursor<Document> cursor6 = docIterator.iterator();
+            ArrayList<Match> ret = new ArrayList<>();
+            while (cursor6.hasNext()) {
+                Match m = new Match();
+                Document curr = cursor6.next();
+                m.setDate(curr.getString("date"));
+                m.setYear(curr.getInteger("years"));
+                m.setHome_team(curr.getString("home_team"));
+                m.setAway_team(curr.getString("away_team"));
+                m.setHome_score(curr.getInteger("home_score"));
+                m.setAway_score(curr.getInteger("away_score"));
+                m.setTournament((curr.getString("tournament")));
+                m.setCity(curr.getString("city"));
+                m.setCountry(curr.getString("country"));
+                m.setNeutral(curr.getBoolean("neutral"));
+                ret.add(m);
+            }
+
+            request.setAttribute("result", ret);
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/SixQuery.jsp");
             dispatcher.forward(request, response);
         }
         else if(query.equals("three")){

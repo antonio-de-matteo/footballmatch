@@ -114,11 +114,12 @@
                     <div class="form-group col-md-4">
                         <label class="text-black">Home Team Score</label>
                         <input type="number" min="6" max="15" step="1" value="6" required class="form-control" name="toview"/>
+                    </div>
+                        <div class="form-group col-md-4">
                         <label class="text-black">How many Match you want to view</label>
                         <input type="number" min="0" max="1000" step="10" value="0" required class="form-control" name="toviewe"/>
-
+                        </div>
                     </div>
-                </div>
                 <button type="submit" class="btn btn-primary right" onclick="searchMatch()">Search</button>
             </form>
         </div>

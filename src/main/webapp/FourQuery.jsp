@@ -123,7 +123,9 @@
                             <option>Copa Chevallier Boutell</option>
                             <option>FIFA World Cup</option>
                         </select>
+
                         <label class="text-black">How many Match you want to view</label>
+
                         <input type="number" min="1" max="100" step="1" value="0" required class="form-control" name="toview"/>
                     </div>
                 </div>
