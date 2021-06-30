@@ -143,6 +143,33 @@ public class Servlet extends HttpServlet {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/SixQuery.jsp");
             dispatcher.forward(request, response);
         }
+        else if(query.equals("seven")){
+            BasicDBObject andQuery = new BasicDBObject();
+           List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+            obj.add(new BasicDBObject("neutral", false));
+            andQuery.put("$and", obj);
+            FindIterable<Document> view = database.getCollection("ItalyVSFranceView").find(andQuery);
+            MongoCursor<Document> cursorView = view.iterator();
+            ArrayList<Match> ret = new ArrayList<>();
+            while (cursorView.hasNext()) {
+                Match m = new Match();
+                Document curr = cursorView.next();
+                m.setDate(curr.getString("date"));
+                m.setHome_team(curr.getString("home_team"));
+                m.setAway_team(curr.getString("away_team"));
+                m.setHome_score(curr.getInteger("home_score"));
+                m.setAway_score(curr.getInteger("away_score"));
+                m.setTournament((curr.getString("tournament")));
+                m.setCity(curr.getString("city"));
+                m.setCountry(curr.getString("country"));
+                m.setNeutral(curr.getBoolean("neutral"));
+                ret.add(m);
+            }
+
+            request.setAttribute("result", ret);
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/SevenQuery.jsp");
+            dispatcher.forward(request, response);
+        }
         else if(query.equals("three")){
             int startDate = Integer.parseInt(request.getParameter("startDate"));
             int endingDate = Integer.parseInt(request.getParameter("toDate"));

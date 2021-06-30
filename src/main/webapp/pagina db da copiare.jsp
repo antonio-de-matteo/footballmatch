@@ -145,7 +145,7 @@ andQuery.put("$and",obj);
     FindIterable<Document> view = database.getCollection("ItalyVSFranceView").find();
     MongoCursor<Document> cursorView = view.iterator();
     while(cursorView.hasNext()){
-        System.out.println("Date in view"+ cursorView.next());
+
     }%>
     // SEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEEE
 
