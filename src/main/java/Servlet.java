@@ -1,10 +1,7 @@
 import com.mongodb.BasicDBObject;
 import com.mongodb.MongoClient;
 import com.mongodb.MongoClientURI;
-import com.mongodb.client.FindIterable;
-import com.mongodb.client.MongoCollection;
-import com.mongodb.client.MongoCursor;
-import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.*;
 import com.mongodb.client.model.Filters;
 import model.Match;
 import org.bson.Document;
@@ -19,6 +16,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -144,8 +142,20 @@ public class Servlet extends HttpServlet {
             dispatcher.forward(request, response);
         }
         else if(query.equals("seven")){
+            collection.aggregate(Arrays.asList(new Document("$project",
+                            new Document("_id", 0L)
+                                    .append("home_team", 1L)
+                                    .append("home_score", 1L)
+                                    .append("away_team", 1L)
+                                    .append("away_score", 1L)
+                                    .append("date", 1L)),
+                    new Document("$match",
+                            new Document("home_team", "Italy")
+                                    .append("away_team", "France")
+                                    .append("$expr",
+                                            new Document("$gt", Arrays.asList("$home_score", "$away_score"))))));
             BasicDBObject andQuery = new BasicDBObject();
-           List<BasicDBObject> obj = new ArrayList<BasicDBObject>();
+           List<BasicDBObject> obj = new ArrayList<>();
             obj.add(new BasicDBObject("neutral", false));
             andQuery.put("$and", obj);
             FindIterable<Document> view = database.getCollection("ItalyVSFranceView").find(andQuery);
