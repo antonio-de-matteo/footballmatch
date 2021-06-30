@@ -121,8 +121,8 @@ andQuery.put("$and",obj);
     Bson project = Filters.and(Filters.eq("_id", 0L), Filters.eq("home_score", 1L), Filters.eq("away_score", 1L), Filters.eq("home_team", 1L), Filters.eq("away_team", 1L), Filters.eq("date", 1L));
     FindIterable<Document> resultProj = collection.find(filter1)
             .projection(project);
-    int h=0;
     MongoCursor<Document> cursorGTE = resultProj.iterator();
+    int h=0;
     while(cursorGTE.hasNext() && h<5) {
         System.out.println(cursorGTE.next());
         h++;

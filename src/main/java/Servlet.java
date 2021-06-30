@@ -5,6 +5,7 @@ import com.mongodb.client.FindIterable;
 import com.mongodb.client.MongoCollection;
 import com.mongodb.client.MongoCursor;
 import com.mongodb.client.MongoDatabase;
+import com.mongodb.client.model.Filters;
 import model.Match;
 import org.bson.Document;
 import org.bson.conversions.Bson;
@@ -140,6 +141,62 @@ public class Servlet extends HttpServlet {
             RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/ThreeQuery.jsp");
             dispatcher.forward(request, response);
         }
+        else if(query.equals("four")){
+            String torneo = request.getParameter("homeTeam");
+            String a = request.getParameter("toview");
+            int toview =Integer.parseInt(request.getParameter("toview"));
+            FindIterable<Document> typeOftournment = collection.find(Filters.eq("tournament", torneo))
+                    .skip(1)
+                    .limit(toview);
+            ArrayList<Match> ret = new ArrayList<>();
+            MongoCursor<Document> cursortournment = typeOftournment.iterator();
+            while (cursortournment.hasNext()) {
+                Match m = new Match();
+                Document curr = cursortournment.next();
+                m.setDate(curr.getString("date"));
+                m.setYear(curr.getInteger("years"));
+                m.setHome_team(curr.getString("home_team"));
+                m.setAway_team(curr.getString("away_team"));
+                m.setHome_score(curr.getInteger("home_score"));
+                m.setAway_score(curr.getInteger("away_score"));
+                m.setTournament((curr.getString("tournament")));
+                m.setCity(curr.getString("city"));
+                m.setCountry(curr.getString("country"));
+                m.setNeutral(curr.getBoolean("neutral"));
+                ret.add(m);
+            }
+            request.setAttribute("result", ret);
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/FourQuery.jsp");
+            dispatcher.forward(request, response);
+        }
+        else if(query.equals("five")){
+            int toview =Integer.parseInt(request.getParameter("toview"));
+            int toviewe =Integer.parseInt(request.getParameter("toviewe"));
+            Bson filter1 = Filters.gte("home_score", toview);
+            Bson project = Filters.and(Filters.eq("_id", 0L), Filters.eq("home_score", 1L), Filters.eq("away_score", 1L), Filters.eq("home_team", 1L), Filters.eq("away_team", 1L), Filters.eq("date", 1L));
+            FindIterable<Document> resultProj = collection.find(filter1)
+                    .projection(project)
+                    .limit(toviewe);
+            MongoCursor<Document> cursorGTE = resultProj.iterator();
+            ArrayList<Match> ret = new ArrayList<>();
+            MongoCursor<Document> cursortournment2 = resultProj.iterator();
+            while (cursortournment2.hasNext()) {
+                Match m = new Match();
+                Document curr = cursortournment2.next();
+                m.setDate(curr.getString("date"));
+                m.setHome_team(curr.getString("home_team"));
+                m.setAway_team(curr.getString("away_team"));
+                m.setHome_score(curr.getInteger("home_score"));
+                m.setAway_score(curr.getInteger("away_score"));
+                ret.add(m);
+            }
+            request.setAttribute("result", ret);
+            RequestDispatcher dispatcher = getServletContext().getRequestDispatcher("/FiveQuery.jsp");
+            dispatcher.forward(request, response);
+
+
+        }
+
     }
     protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         // TODO Auto-generated method stub

@@ -13,6 +13,7 @@
 <%@ page import="static com.mongodb.client.model.Filters.gte" %>
 <%@ page import="static javax.management.Query.and" %>
 <%@ page import="static com.mongodb.client.model.Filters.eq" %>
+<%@ page import="model.Match" %>
 
 
 <!DOCTYPE html>
@@ -107,16 +108,16 @@
             <h6 class="m-0 font-weight-bold text-primary">Matches in which the home team has scored more than x goals </h6>
         </div>
         <div class="card-body">
-            <form id="searchQueryUno">
+            <form id="searchQueryUno" action="ServletQuerys" method="post">
+                <input type="hidden" name="query" value="five">
                 <div class="form-row">
-
-
                     <div class="form-group col-md-4">
                         <label class="text-black">Home Team Score</label>
-                        <input type="text" class="form-control" name="homeTeamScore" required pattern="[0-9]+" placeholder="Insert home team score">
+                        <input type="number" min="6" max="15" step="1" value="6" required class="form-control" name="toview"/>
+                        <label class="text-black">How many Match you want to view</label>
+                        <input type="number" min="0" max="1000" step="10" value="0" required class="form-control" name="toviewe"/>
+
                     </div>
-
-
                 </div>
                 <button type="submit" class="btn btn-primary right" onclick="searchMatch()">Search</button>
             </form>
@@ -124,24 +125,40 @@
     </div>
 
 
-    <div class="table-responsive" id="matchTable" style="display: none; width: 90%;
+    <% 	if(request.getAttribute("result")!=null){
+        ArrayList<Match> result = (ArrayList<Match>) request.getAttribute("result");
+
+    %>
+
+
+
+    <div class="table-responsive" id="matchTable" style=" width: 90%;
     margin-left: 5%;">
         <table class="table table-bordered"  width="100%" cellspacing="0">
             <thead>
-            <tr>
+            <tr style="background-color:#007bff">
                 <th>Date</th>
                 <th>Home Team</th>
                 <th>Away Team</th>
                 <th>Home score</th>
                 <th>Away score</th>
-
             </tr>
+            <% for (Match m : result)
+            {%>
+            <tr>
+                <td><%=m.getDate()%></td>
+                <td><%=m.getHome_team()%></td>
+                <td><%=m.getAway_team()%></td>
+                <td><%=m.getHome_score()%></td>
+                <td><%=m.getAway_score()%></td>
+            </tr>
+            <%}%>
             </thead>
         </table>
+
+        <% }%>
     </div>
 </div>
-
-
 <footer class="sticky-footer bg-white">
     <div class="container my-auto">
         <div class="copyright text-center my-auto">
@@ -149,7 +166,5 @@
         </div>
     </div>
 </footer>
-</div>
-
 </body>
 </html>
